@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>OAuth using DataPower: Part 6</title>
+<style type="text/css">
+p {
+  margin-left: 10px;
+	width: 600px;
+}
+</style>
+</head>
+
+<body>
+<h1>Implementing OAuth with DataPower: Part 6</h1>
+<p>
+This page is served by a Node.js server playing the role of
+an OAuth client application.
+It complements the exercise of from the article
+<a href="http://www.ibm.com/developerworks/websphere/library/techarticles/1208_poon2/1208_poon2.html">Implementing OAuth with WebSphere DataPower Appliances, Part 6</a>
+as updated Summer 2014.
+In the figure below, the purple box represents the DataPower
+services you created for the exercise.  The green box represents
+processes in your workstation.  The Node.js a server simulates an
+OAuth client and writes status messages to the command line.  Your
+browser plays the role of the resource owner.
+</p>
+
+<img src="setup.jpg" 
+     width="500"
+     alt="Diagram of exercsie components."/>
+
+<p>
+This page represents Step 2 shown in Figure 1 of 
+<a href="http://www.ibm.com/developerworks/websphere/library/techarticles/1208_poon2/1208_poon2.html">the article</a>
+and reproduced at the bottom of this page.
+The login requirement was removed for simplicity.  
+This is the page from which Step 3 of Figure 1 is initiated.
+</p>
+
+<form method="POST" action="/Part6/getAccount/auth">
+  <label>Resource</label>
+  <input type="text" placeholder="getAccountInfo" name="resource"/>
+  <input type="submit" value="Begin Step 3"/>
+</form>
+
+<p>
+Much of the OAuth interaction happens between the OAuth client and
+the authorization/token server.  The activity is best viewed from
+the Node.js command line.
+</p>
+<em>Figure 1 from Part 6 article</em><br/>
+<img src="figure1.png" 
+     alt="OAuth Authentication Code Overview"
+		 width="600"/>
+</body>
+</html>
