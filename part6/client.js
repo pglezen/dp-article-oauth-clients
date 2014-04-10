@@ -27,6 +27,7 @@ var resource_server_options = { 'hostname': '192.168.152.12',
                               };
 
 exports.showSettings = function() {
+  util.log('Part6-----------------------------------------------------');
   util.log('Part6            client ID: ' + client_id);
   util.log('Part6        client secret: ' + client_secret);
   util.log('Part6 authorization server: ' + auth_server);
@@ -34,6 +35,7 @@ exports.showSettings = function() {
                                         ':' + resource_server_options.port);
   util.log('Part6                scope: ' + resource_server_options.path);
   util.log('Part6  Client App Homepage: ' + client_home);
+  util.log('Part6-----------------------------------------------------');
 };
 
 // Return a redirect to acquire auth code.
