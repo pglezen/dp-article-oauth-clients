@@ -13,6 +13,7 @@ var      fs = require('fs');
 
 var OAuthClients = {
     'Part4': require('./part4/client.js'),
+    'Part5': require('./part5/client.js'),
     'Part6': require('./part6/client.js')
 };
 for (var client in OAuthClients) {

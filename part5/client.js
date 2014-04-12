@@ -1,16 +1,16 @@
-// This file defines OAuth client actions for Part4.
+// This file defines OAuth client actions for Part5.
 //
 var   https = require('https');
 var    util = require('util');
 var      qs = require('querystring');
 var urlutil = require('url');
 
-var   client_home   = 'https://127.0.0.1:5005/Part4/index.html';
-var   client_id     = 'password-client';
+var   client_home   = 'https://127.0.0.1:5005/Part5/index.html';
+var   client_id     = 'account-application';
 var   client_secret = 'passw0rd';
-var     auth_server = '192.168.152.12:5040';
+var     auth_server = '192.168.152.12:5050';
 var token_server_options = { 'hostname': '192.168.152.12',
-                                 'port': 5040,
+                                 'port': 5050,
                                  'path': '/token',
                                'method': 'POST',
                                  'auth': client_id + ':' + client_secret,
@@ -18,7 +18,7 @@ var token_server_options = { 'hostname': '192.168.152.12',
                               'headers': {'Content-Type': 'application/x-www-form-urlencoded'}
                            };
 var resource_server_options = { 'hostname': '192.168.152.12',
-                                    'port': 5041,
+                                    'port': 5051,
                                     'path': '/getAccount',
                                   'method': 'GET',
                       'rejectUnauthorized': false,
@@ -26,22 +26,22 @@ var resource_server_options = { 'hostname': '192.168.152.12',
                               };
 
 exports.showSettings = function() {
-  util.log('Part4-----------------------------------------------------');
-  util.log('Part4           client ID: ' + client_id);
-  util.log('Part4       client secret: ' + client_secret);
-  util.log('Part4        token server: ' + auth_server);
-  util.log('Part4     resource server: ' + resource_server_options.hostname +
+  util.log('Part5-----------------------------------------------------');
+  util.log('Part5           client ID: ' + client_id);
+  util.log('Part5       client secret: ' + client_secret);
+  util.log('Part5        token server: ' + auth_server);
+  util.log('Part5     resource server: ' + resource_server_options.hostname +
                                      ':' + resource_server_options.port);
-  util.log('Part4               scope: ' + resource_server_options.path);
-  util.log('Part4 Client App Homepage: ' + client_home);
-  util.log('Part4-----------------------------------------------------');
+  util.log('Part5               scope: ' + resource_server_options.path);
+  util.log('Part5 Client App Homepage: ' + client_home);
+  util.log('Part5-----------------------------------------------------');
 };
 
 
 // Accept resource owner username and password.
 //
 exports['getAccount'] = function(req, res) {
-  util.log('Entered Part 4 getAccount handler.');
+  util.log('Entered Part 5 getAccount handler.');
   var postbody = '';
   var result = '';
   req.setEncoding('utf8');
@@ -50,19 +50,11 @@ exports['getAccount'] = function(req, res) {
   });
   req.on('end', function() {
     var postParams = qs.parse(postbody);
-    if (postParams.username && postParams.password) {
-      getToken(postParams.username, postParams.password);
-      result = 'Client recieved the username and password.\nFurther interactions ' +
-               'will be between the client and the resource server.';
+    if (postParams.resource) {
+      getToken(postParams.resource);
+      result = 'Client is invoking the resource server directly.';
     } else {
-      if (!postParams.username) {
-        result += "\nusername was missing from post parameters.\n";
-        util.error(result);
-      }
-      if (!postParams.password) {
-        result += "\npassword was missing from post parameters.\n";
-        util.error(result);
-      }
+      result = 'Missing resource from post parameter.';
       util.error(util.inspect(postParams));
     }
     res.end(result);
@@ -73,7 +65,7 @@ exports['getAccount'] = function(req, res) {
 // Given the resource owner username and password, fetch a token from the
 // token server.
 //
-function getToken(username, password) {
+function getToken(resource) {
   util.log('Begin token request: Step 1 of Figure 1.');
   var req = https.request(token_server_options, handleTokenResponse);
   req.on('error', function(e) {
@@ -82,10 +74,8 @@ function getToken(username, password) {
     util.error(util.inspect(token_server_options));
   });
   var body = qs.stringify({
-    'grant_type': 'password',
-      'username': username,
-      'password': password,
-         'scope': resource_server_options.path
+      'grant_type': 'client_credentials',
+           'scope': resource
   });
   req.write(body);
   req.end();
@@ -103,15 +93,19 @@ function handleTokenResponse(res) {
   util.log('Begin token response: Step 1 of Figure 1.');
   util.log('Token server status code: ' + res.statusCode);
   res.setEncoding('utf8');
+  var responseBody = '';
   res.on('data', function(chunk) {
-    var tokenResponse = JSON.parse(chunk);
+    responseBody += chunk;
+  });
+  res.on('end', function() {
+    var tokenResponse = JSON.parse(responseBody);
     if (tokenResponse) {
       console.log(util.inspect(tokenResponse));
       if (tokenResponse.access_token) {
         getResource(tokenResponse.access_token);
       }
     } else {
-      util.error('Could not parse token server response body: ' + chunk);
+      util.error('Could not parse token server response body: ' + responseBody);
     }
   });
   util.log('End token response: Step 1 of Figure 1.');
