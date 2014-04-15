@@ -1,0 +1,7 @@
+{
+  'name': 'OAuthClient',
+  'main': './OAuthClient.js',
+  'version': '1.0.0',
+  'description': 'OAuth client to help validate exercises from OAuth article series.',
+  'repository': 'https://github.com/pglezen/dp-article-oauth-clients'
+}
