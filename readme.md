@@ -29,7 +29,7 @@ No fancy middleware is required.
 Change to the main directory (with OAuthClient.js in it) and run
 
 ```
-node OAuthClient
+node OAuthClient [DP IP address]
 ```
 
 It should print out a list of the article parts that have been
@@ -37,7 +37,7 @@ included.  In the example below, article parts 4, 5, and 6 have
 been included.  Part 8 has not.
 
 ```
-$ node OAuthClient
+$ node OAuthClient 192.168.152.12
 15 Apr 14:29:54 - Part4-----------------------------------------------------
 15 Apr 14:29:54 - Part4           client ID: password-client
 15 Apr 14:29:54 - Part4       client secret: passw0rd
@@ -65,6 +65,8 @@ $ node OAuthClient
 15 Apr 14:29:54 - OAuth client is listening on port 5005 and expecting SSL.
 ```
 
-Each article part has its own homepage.  It's assumed you're browser and your
+Each article part has its own homepage.  To get started with a particular
+part, copy-n-paste the URL it lists for its *Client App Homepage*.
+It's assumed your browser and your
 Node.js server are running on the same machine.  You can run the OAuth client
 anywhere you want so long as it has direct access to DataPower.

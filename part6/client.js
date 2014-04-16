@@ -5,12 +5,11 @@ var    util = require('util');
 var      qs = require('querystring');
 var urlutil = require('url');
 
-var   client_home   = 'https://127.0.0.1:5005/Part6/index.html';
-var   client_id     = 'myregistered_oauthclient';
-var   client_secret = 'passw0rd';
-var    redirect_uri = 'https://127.0.0.1:5005/Part6/getAccount/code'; 
-var     auth_server = '192.168.152.12:5060';
-var token_server_options = { 'hostname': '192.168.152.12',
+var client_home   = 'https://127.0.0.1:5005/Part6/index.html';
+var client_id     = 'myregistered_oauthclient';
+var client_secret = 'passw0rd';
+var redirect_uri  = 'https://127.0.0.1:5005/Part6/getAccount/code'; 
+var token_server_options = { 'hostname': 'undefined',
                                  'port': 5060,
                                  'path': '/token',
                                'method': 'POST',
@@ -18,7 +17,7 @@ var token_server_options = { 'hostname': '192.168.152.12',
                    'rejectUnauthorized': false,
                               'headers': {'Content-Type': 'application/x-www-form-urlencoded'}
                            };
-var resource_server_options = { 'hostname': '192.168.152.12',
+var resource_server_options = { 'hostname': 'undefined',
                                     'port': 5061,
                                     'path': '/getAccountInfo',
                                   'method': 'GET',
@@ -26,24 +25,32 @@ var resource_server_options = { 'hostname': '192.168.152.12',
                                  'headers': {}
                               };
 
+exports.setDpIp = function(dp_ip) {
+     token_server_options.hostname = dp_ip;
+  resource_server_options.hostname = dp_ip;
+};
+
 exports.showSettings = function() {
   util.log('Part6-----------------------------------------------------');
   util.log('Part6            client ID: ' + client_id);
   util.log('Part6        client secret: ' + client_secret);
-  util.log('Part6 authorization server: ' + auth_server);
+  util.log('Part6 authorization server: ' + token_server_options.hostname +
+                                      ':' + token_server_options.port);
   util.log('Part6      resource server: ' + resource_server_options.hostname +
-                                        ':' + resource_server_options.port);
+                                      ':' + resource_server_options.port);
   util.log('Part6                scope: ' + resource_server_options.path);
   util.log('Part6  Client App Homepage: ' + client_home);
   util.log('Part6-----------------------------------------------------');
 };
 
 // Return a redirect to acquire auth code.
+// jshint -W069
 //
 exports['getAccount/auth'] = function(req, res) {
   util.log('Entered Part6 getAccount/auth handler.  Step 3 of Figure 1 completed.');
   
-  var locationURI = 'https://' + auth_server + '/authorize?' +
+  var locationURI = 'https://' + token_server_options.hostname + ':' +
+                                 token_server_options.port + '/authorize?' +
                     qs.stringify({
                       'response_type': 'code',
                       'client_id': client_id,
@@ -85,8 +92,8 @@ exports['getAccount/code'] = function(req, res) {
       util.error('Authorization code was absent');
     }
     util.debug('State = ' + url.query.state);
-    result = 'Client recieved the auth code.  Further interactions will be between' +
-             'the client, the OAuth authorization server and the resource server.';
+    result = 'Client recieved the auth code.  Further interactions will be between ' +
+             'the client, the OAuth authorization server, and the resource server.';
   }
     
   res.writeHead(200, {'Content-type': 'text/plain'});

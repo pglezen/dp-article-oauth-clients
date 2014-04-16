@@ -11,22 +11,35 @@ var urlutil = require('url');
 var    util = require('util');
 var      fs = require('fs');
 
+var   dp_ip = '192.168.152.12';
+
+if (process.argv.length > 2) {
+  dp_ip = process.argv[2];
+}
+if (process.argv.length > 3) {
+  console.log('\nUsage: node OAuthClient [DataPower IP]\n');
+  console.log('\tIf [DataPower IP] is not supplied, ' + dp_ip + ' is assumed.');
+  console.log('\tTo change this default, search for \'dp_ip\' in OAuthClient.js\n');
+  return;
+}
+
 var OAuthClients = {
     'Part4': require('./part4'),
     'Part5': require('./part5'),
     'Part6': require('./part6')
 };
 for (var client in OAuthClients) {
+  OAuthClients[client].setDpIp(dp_ip);
   OAuthClients[client].showSettings();
 }
 
 var  router = function(req, res) {
   var url = urlutil.parse(req.url);
   util.log('-------------- Path: ' + url.path + ' ----------------');
-	if (url.path === '/favicon.ico') {
-	  sendError(res);
-		return;
-	}
+  if (url.path === '/favicon.ico') {
+    sendError(res);
+    return;
+  }
   var staticFileCandidate = url.pathname.substring(1);
   var file = fs.createReadStream(staticFileCandidate);
   file.on('open', function() {
@@ -57,7 +70,7 @@ var  router = function(req, res) {
         sendError(res);
       }
     } else {
-		 util.error('Could not find matching file or application handler.');
+     util.error('Could not find matching file or application handler.');
      util.error('Encountered file error: ' + err);
      sendError(res);
     }

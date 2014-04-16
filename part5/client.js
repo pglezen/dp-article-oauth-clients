@@ -5,11 +5,10 @@ var    util = require('util');
 var      qs = require('querystring');
 var urlutil = require('url');
 
-var   client_home   = 'https://127.0.0.1:5005/Part5/index.html';
-var   client_id     = 'account-application';
-var   client_secret = 'passw0rd';
-var     auth_server = '192.168.152.12:5050';
-var token_server_options = { 'hostname': '192.168.152.12',
+var client_home   = 'https://127.0.0.1:5005/Part5/index.html';
+var client_id     = 'account-application';
+var client_secret = 'passw0rd';
+var token_server_options = { 'hostname': 'undefined',
                                  'port': 5050,
                                  'path': '/token',
                                'method': 'POST',
@@ -17,7 +16,7 @@ var token_server_options = { 'hostname': '192.168.152.12',
                    'rejectUnauthorized': false,
                               'headers': {'Content-Type': 'application/x-www-form-urlencoded'}
                            };
-var resource_server_options = { 'hostname': '192.168.152.12',
+var resource_server_options = { 'hostname': 'undefined',
                                     'port': 5051,
                                     'path': '/getAccount',
                                   'method': 'GET',
@@ -25,11 +24,17 @@ var resource_server_options = { 'hostname': '192.168.152.12',
                                  'headers': {}
                               };
 
+exports.setDpIp = function(dp_ip) {
+     token_server_options.hostname = dp_ip;
+  resource_server_options.hostname = dp_ip;
+};
+
 exports.showSettings = function() {
   util.log('Part5-----------------------------------------------------');
   util.log('Part5           client ID: ' + client_id);
   util.log('Part5       client secret: ' + client_secret);
-  util.log('Part5        token server: ' + auth_server);
+  util.log('Part5        token server: ' + token_server_options.hostname    +
+                                     ':' + token_server_options.port);
   util.log('Part5     resource server: ' + resource_server_options.hostname +
                                      ':' + resource_server_options.port);
   util.log('Part5               scope: ' + resource_server_options.path);
@@ -39,6 +44,7 @@ exports.showSettings = function() {
 
 
 // Accept resource owner username and password.
+// jshint -W069
 //
 exports['getAccount'] = function(req, res) {
   util.log('Entered Part 5 getAccount handler.');
