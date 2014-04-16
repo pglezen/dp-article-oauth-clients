@@ -73,6 +73,10 @@ exports['getAccount'] = function(req, res) {
   req.on('end', function() {
     var postParams = qs.parse(postbody);
     if (postParams.username && postParams.password) {
+      if (postParams.resource) {
+        resource_server_options.path = postParams.resource;
+        util.log('Resource set to ' + resource_server_options.path);
+      }
       getToken(postParams.username, postParams.password);
       result = 'Client recieved the username and password.\nFurther interactions ' +
                'will be between the client and the resource server.';

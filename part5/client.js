@@ -73,7 +73,9 @@ exports['getAccount'] = function(req, res) {
   req.on('end', function() {
     var postParams = qs.parse(postbody);
     if (postParams.resource) {
-      getToken(postParams.resource);
+      resource_server_options.path = postParams.resource;
+      util.log('Resource set to ' + resource_server_options.path);
+      getToken();
       result = 'Client is invoking the resource server directly.';
     } else {
       result = 'Missing resource from post parameter.';
@@ -87,7 +89,7 @@ exports['getAccount'] = function(req, res) {
 // Given the resource owner username and password, fetch a token from the
 // token server.
 //
-function getToken(resource) {
+function getToken() {
   util.log('Begin token request: Step 1 of Figure 1.');
   var req = https.request(token_server_options, handleTokenResponse);
   req.on('error', function(e) {
@@ -97,7 +99,7 @@ function getToken(resource) {
   });
   var body = qs.stringify({
       'grant_type': 'client_credentials',
-           'scope': resource
+           'scope': resource_server_options.path
   });
   req.write(body);
   req.end();

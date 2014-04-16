@@ -65,28 +65,39 @@ exports.showSettings = function() {
 //
 exports['getAccount/auth'] = function(req, res) {
   util.log('Entered Part6 getAccount/auth handler.  Step 3 of Figure 1 completed.');
-  
-  var locationURI = 'https://' + token_server_options.hostname + ':' +
-                                 token_server_options.port + '/authorize?' +
-                    qs.stringify({
-                      'response_type': 'code',
-                      'client_id': client_id,
-                      'scope': '/getAccountInfo',
-                      'state': 'xyz',
-                      'redirect_uri': redirect_uri
-                  });
-
-  util.log('Client sending redirect back to browser.');
-  util.debug('  Location header: ' + locationURI);
-  res.writeHead(302, {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Location': locationURI
+  var postBody = '';
+  req.setEncoding('utf8');
+  req.on('data', function(chunk) {
+    postBody += chunk;
   });
-  res.end();
-  util.log('Redirect sent (Step 4 of Figure 1).');
-  util.log('The Authorization server should now be challenging you, the resource owner,');
-  util.log('to provide your credentials (Step 5 of Figure 1).  If successful, you\'ll');
-  util.log('be asked whether to provide me, the OAuth client, a grant code.');
+  req.on('end', function() {
+    var postParams = qs.parse(postBody);
+    if (postParams.resource) {
+      resource_server_options.path = postParams.resource;
+      util.log('Resource set to ' + resource_server_options.path);
+    }
+    var locationURI = 'https://' + token_server_options.hostname + ':' +
+                                   token_server_options.port + '/authorize?' +
+                      qs.stringify({
+                        'response_type': 'code',
+                        'client_id': client_id,
+                        'scope': resource_server_options.path,
+                        'state': 'xyz',
+                        'redirect_uri': redirect_uri
+                    });
+
+    util.log('Client sending redirect back to browser.');
+    util.debug('  Location header: ' + locationURI);
+    res.writeHead(302, {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Location': locationURI
+    });
+    res.end();
+    util.log('Redirect sent (Step 4 of Figure 1).');
+    util.log('The Authorization server should now be challenging you, the resource owner,');
+    util.log('to provide your credentials (Step 5 of Figure 1).  If successful, you\'ll');
+    util.log('be asked whether to provide me, the OAuth client, a grant code.');
+  });
 };
 
 // Handle a returned authorization code.
