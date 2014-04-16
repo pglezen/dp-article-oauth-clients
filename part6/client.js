@@ -109,7 +109,7 @@ exports['getAccount/code'] = function(req, res) {
       util.error('Authorization code was absent');
     }
     util.debug('State = ' + url.query.state);
-    result = 'Client recieved the auth code.  Further interactions will be between ' +
+    result = 'Client recieved the auth code.\nFurther interactions will be between ' +
              'the client, the OAuth authorization server, and the resource server.';
   }
     
@@ -186,6 +186,9 @@ function handleAccountInfo(res) {
     if (accountInfo) {
       util.log('Retrieved account info.');
       console.log(util.inspect(accountInfo));
+      if (accountInfo.name && accountInfo.balance) {
+        util.log('----------- Part 6 Success -------------');
+      }
     } else {
       util.error('Could not parse resource server response: ' + chunk);
     }

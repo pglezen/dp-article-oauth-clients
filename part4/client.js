@@ -167,6 +167,9 @@ function handleAccountInfo(res) {
     if (accountInfo) {
       util.log('Retrieved account info.');
       console.log(util.inspect(accountInfo));
+      if (accountInfo.name && accountInfo.balance) {
+        util.log('----------- Part 4 Success -------------');
+      }
     } else {
       util.error('Could not parse resource server response: ' + chunk);
     }
