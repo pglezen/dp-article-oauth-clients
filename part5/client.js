@@ -5,7 +5,9 @@ var    util = require('util');
 var      qs = require('querystring');
 var urlutil = require('url');
 
-var client_home   = 'https://127.0.0.1:5005/Part5/index.html';
+var client_host   = '127.0.0.1';
+var client_port   = 5005;
+var client_home   = 'https://' + client_host + ':' + client_port + '/Part5/index.html';
 var client_id     = 'account-application';
 var client_secret = 'passw0rd';
 var token_server_options = { 'hostname': 'undefined',
@@ -27,6 +29,20 @@ var resource_server_options = { 'hostname': 'undefined',
 exports.setDpIp = function(dp_ip) {
      token_server_options.hostname = dp_ip;
   resource_server_options.hostname = dp_ip;
+};
+
+function updateClientHome() {
+  client_home = 'https://' + client_host + ':' + client_port + '/Part5/index.html';
+}
+
+exports.setClientPort = function(port) {
+  client_port = port;
+  updateClientHome();
+};
+
+exports.setClientHost = function(host) {
+  client_host = host;
+  updateClientHome();
 };
 
 exports.showSettings = function() {
