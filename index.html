@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DataPower/OAuth Clients</title>
+<style type="text/css">
+  body {
+    width: 750px;
+  }
+  #background {
+    background-color: #e0a852;
+  }
+  #banner {
+    text-align: center;
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+  }
+  #nav {
+    text-align: center;
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+    font-size: large;
+  }
+  #nav li {
+    display: inline;
+  }
+  #nav ul {
+    padding: 10px 0px;
+    margin-left: 0px;
+    word-spacing: 40px;
+    background-color: #99d49e;
+  }
+  #content {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  #content h2 {
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+    background-color: #78b7cf;
+  }
+  #content p {
+    font-family: Baskerville, "Palatino Linotype", Times, serif;
+    line-height: 120%;
+    word-spacing: 1px;
+  }
+  #content ol {
+    font-family: Baskerville, "Palatino Linotype", Times, serif;
+  }
+  #content ol li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+</style>
+</head>
+<body>
+<div id="background">
+<div id="banner">
+<h1>OAuth Clients</h1>
+for
+<h1>DataPower/OAuth Article Exercises</h1>
+</div>
+<div id="nav">
+<ul>
+<li><a href="OAuthClients.zip">Download</a></li>
+<li><a href="#install">Installation</a></li>
+<li><a href="#run">Execution</a></li>
+<li><a href="https://github.com/pglezen/dp-article-oauth-clients">GitHub</a></li>
+</ul>
+</div>
+<div id="content">
+<p>
+This page describes a supplement to the
+<a href="http://www.ibm.com/developerworks/views/websphere/libraryview.jsp?search_by=Implementing+OAuth+on+IBM+WebSphere+DataPower" target="_blank">
+developerWorks DataPower/OAuth article series</a>,
+Parts 4 - 6. OAuth scenarios usually require three parties.
+</p>
+<ol>
+  <li>Resource owner</li>
+  <li>Client application</li>
+  <li>Authorization server and enforcement point</li>
+</ol>
+<p>
+This complicates testing the result of the exercises with
+just the <tt>curl</tt> command since one must use it to combine
+the first two roles.  This is especially complicated in Part 6,
+the three-legged authorization code credential type.  To simplify
+testing of the exercises, we wrote a Node.js application that plays
+the role of the OAuth client application.  The reader can then use
+a simple browser to play the role of the resource owner.
+</p>
+<p>
+The Node.js was written to be installed as simply as possible.  It
+relies on no extra middleware packages (such as connect or express).
+Only the base install of Node.js is required.  The application runs
+from the command line and displays results of what it is doing on
+behalf of the client applications.  This allows the article reader
+(playing the resource owner with the browser) to view the interaction
+in real time.
+</p>
+<h2><a name="install">Installation</a></h2>
+<ol class="steps">
+  <li>Download Node.js from <a href="http://nodejs.org/download/" target="_blank">the
+  Node.js download site</a>.
+  </li>
+  <li>Install Node.js.  Make sure the <tt>node</tt> command is in your
+  command line PATH environment variable.
+  </li>
+  <li>Download the <a href="">OAuthClients.zip</a> file from this site.
+  </li>
+  <li>Unzip the archive to a location on your file system where you do
+  your work.  The unzip will create a new directory <tt>OAuthClients</tt>.
+  </li>
+</ol>
+<h2><a name="run">Execution</a></h2>
+<ol class="steps">
+  <li>Record the IP address used by DataPower to implement the authorization
+  server.</li>
+  <li>Open a command line and change to the <tt>OAuthClients</tt> directory
+  created from unzipping the download.</li>
+  <li>Run the following command: 
+  <pre>   node OAuthClient.js &lt;dp ip&gt;</pre>
+  where &lt;dp ip&gt; is the IP address of the DataPower authorization
+  server you recorded in the first step.  You should see output similar to
+  the following.
+  <pre>
+$ node OAuthClient.js 192.168.1.4
+26 May 13:51:19 - Part4-----------------------------------------------------
+26 May 13:51:19 - Part4           client ID: password-client
+26 May 13:51:19 - Part4       client secret: passw0rd
+26 May 13:51:19 - Part4        token server: 192.168.1.4:5040
+26 May 13:51:19 - Part4     resource server: 192.168.1.4:5041
+26 May 13:51:19 - Part4               scope: /getAccount
+26 May 13:51:19 - Part4 Client App Homepage: https://127.0.0.1:5005/Part4/index.html
+26 May 13:51:19 - Part4-----------------------------------------------------
+26 May 13:51:19 - Part5-----------------------------------------------------
+26 May 13:51:19 - Part5           client ID: account-application
+26 May 13:51:19 - Part5       client secret: passw0rd
+26 May 13:51:19 - Part5        token server: 192.168.1.4:5050
+26 May 13:51:19 - Part5     resource server: 192.168.1.4:5051
+26 May 13:51:19 - Part5               scope: /getAccount
+26 May 13:51:19 - Part5 Client App Homepage: https://127.0.0.1:5005/Part5/index.html
+26 May 13:51:19 - Part5-----------------------------------------------------
+26 May 13:51:19 - Part6-----------------------------------------------------
+26 May 13:51:19 - Part6            client ID: myregistered_oauthclient
+26 May 13:51:19 - Part6        client secret: passw0rd
+26 May 13:51:19 - Part6 authorization server: 192.168.1.4:5060
+26 May 13:51:19 - Part6      resource server: 192.168.1.4:5061
+26 May 13:51:19 - Part6                scope: /getAccountInfo
+26 May 13:51:19 - Part6  Client App Homepage: https://127.0.0.1:5005/Part6/index.html
+26 May 13:51:19 - Part6-----------------------------------------------------
+26 May 13:51:19 - OAuth client is listening on port 5005 and expecting SSL.
+  </pre>
+  Each section corresponds to an OAuth client for a particular part of the
+  article series.  In the example above, there are clients for parts 4, 5,
+  and 6.
+  </li>
+  <li>Open a browser to the <em>Client App Homepage</em> listed for the
+  part you are working on.  For example, if you are working on Part 4, then
+  using the above listing you would open your browser to
+  <blockquote>https://127.0.0.1:5005/Part4/index.html</blockquote>
+  Note that the protocol specifies SSL and that your browser will warn you
+  that it does not approve of the unrecognized certificate served.
+  </li>
+  <li>The homepage served by the Node.js server will provide instructions
+  specific to the OAuth scenario you are investigating.  Be sure to keep
+  one eye on the Node.js log output.  That's where most of the action is!
+  </li>
+</ol>
+<p>
+Note that the OAuth client is assumed to be running on the localhost together
+with your browser.  You can run the OAuth client on a separate host from your
+browser.  But if you do that, the localhost redirects won't work.  In that case,
+you have to provide a second parameter to the OAuthClient.js program specifying
+the IP where the OAuth client is running.  It will include this IP in its
+redirects so that redirects from the authorization server to your browser can
+find the OAuth client.
+</p>
+<p>
+Hit Ctrl-C at the command line to quite the OAuth client.
+</p>
+</div>
+</div>
+</body>
+</html>
