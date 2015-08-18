@@ -7,7 +7,7 @@ var urlutil = require('url');
 
 var client_host   = '127.0.0.1';
 var client_port   = 5005;
-var client_home   = 'https://' + client_host + ':' + client_port + '/Part4/index.html';
+var client_home   = 'https://' + client_host + ':' + client_port + '/part4/index.html';
 var client_id     = 'password-client';
 var client_secret = 'passw0rd';
 var token_server_options = { 'hostname': 'undefined',
@@ -32,7 +32,7 @@ exports.setDpIp = function(dp_ip) {
 };
 
 function updateClientHome() {
-  client_home = 'https://' + client_host + ':' + client_port + '/Part4/index.html';
+  client_home = 'https://' + client_host + ':' + client_port + '/part4/index.html';
 }
 
 exports.setClientPort = function(port) {

@@ -7,7 +7,7 @@ var urlutil = require('url');
 
 var client_host   = '127.0.0.1';
 var client_port   = 5005;
-var client_home   = 'https://' + client_host + ':' + client_port + '/Part6/index.html';
+var client_home   = 'https://' + client_host + ':' + client_port + '/part6/index.html';
 var redirect_uri  = 'https://' + client_host + ':' + client_port + '/Part6/getAccount/code'; 
 var client_id     = 'myregistered_oauthclient';
 var client_secret = 'passw0rd';
@@ -33,7 +33,7 @@ exports.setDpIp = function(dp_ip) {
 };
 
 function updateClientHome() {
-  client_home  = 'https://' + client_host + ':' + client_port + '/Part6/index.html';
+  client_home  = 'https://' + client_host + ':' + client_port + '/part6/index.html';
   redirect_uri = 'https://' + client_host + ':' + client_port + '/Part6/getAccount/code';
 }
 
